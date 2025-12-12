@@ -1,15 +1,19 @@
 name: Import libdvbcsa snapshot
 
 on:
-  workflow_dispatch:
+  workflow_dispatch:   # se lanza manualmente desde la pestaña Actions
 
 jobs:
   import:
     runs-on: ubuntu-latest
     steps:
+      # 1️⃣ Checkout del propio repo con permisos de escritura
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
+      # 2️⃣ Descargar el tarball del commit concreto de libdvbcsa
       - name: Download libdvbcsa tarball
         run: |
           COMMIT=f25351d70589ec97ae6fb7590786c9aa38b999d4
@@ -17,10 +21,12 @@ jobs:
           mkdir libdvbcsa
           tar -xzf libdvbcsa.tar.gz -C libdvbcsa --strip-components=1
 
+      # 3️⃣ Configurar remoto con token para poder hacer push
       - name: Set up push access
         run: |
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
 
+      # 4️⃣ Copiar snapshot dentro del repo y hacer commit
       - name: Commit snapshot into repo
         run: |
           git config --global user.name "github-actions"
@@ -30,3 +36,6 @@ jobs:
           git commit -m "Import libdvbcsa at commit f25351d70589ec97ae6fb7590786c9aa38b999d4" || echo "No changes to commit"
           git push
 
+      # 5️⃣ Mostrar qué se ha importado
+      - name: List files
+        run: ls -R .
