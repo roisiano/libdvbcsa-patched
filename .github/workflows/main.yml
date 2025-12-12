@@ -1,0 +1,8 @@
+      - name: Commit snapshot into repo
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "actions@github.com"
+          cp -r libdvbcsa/* .
+          git add .
+          git commit -m "Import libdvbcsa at commit f25351d70589ec97ae6fb7590786c9aa38b999d4"
+          git push
