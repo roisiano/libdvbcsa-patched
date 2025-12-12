@@ -35,6 +35,8 @@ jobs:
           git add .
           git commit -m "Import libdvbcsa at commit f25351d70589ec97ae6fb7590786c9aa38b999d4" || echo "No changes to commit"
           git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # 5️⃣ Mostrar qué se ha importado
       - name: List files
